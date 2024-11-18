@@ -62,5 +62,35 @@ EOF
 }
 
 
+#!/bin/bash
+
+# Function to configure kubectl for a non-root user
+configure_non_root_user() {
+    echo "Configuring kubectl for non-root user: $USER"
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    echo "Kubectl has been configured for non-root user: $USER"
+}
+
+# Function to configure kubectl for root user
+configure_root_user() {
+    echo "Configuring kubectl for root user"
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    echo "Kubectl has been configured for root user"
+    echo "To make this permanent, add 'export KUBECONFIG=/etc/kubernetes/admin.conf' to your .bashrc or equivalent."
+}
+
+
+
 networking
 install-crio
+
+# Check if the user is root
+if [ "$(id -u)" -eq 0 ]; then
+    # User is root
+    configure_root_user
+else
+    # User is not root
+    configure_non_root_user
+fi
