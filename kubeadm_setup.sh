@@ -22,3 +22,7 @@ EOF
 sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
 sudo systemctl enable --now kubelet
+
+sudo chmod +x ./kubeadm_setup.sh
+
+./kubeadm_setup.sh
